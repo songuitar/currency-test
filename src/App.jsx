@@ -6,41 +6,44 @@ import {useState} from "react";
 function App() {
     const currenciesList = currencies;
     const defaultCurrency = currenciesList[0];
+    const defaultPresets = usdPresets;
+    const preSelectedPreset = defaultPresets[0];
 
     let [selectedCurrency, setSelectedCurrency] = useState(defaultCurrency);
 
-    let [presetsList, setPresetsList] = useState(usdPresets);
-    let [value, setValue] = useState(presetsList[0].toString());
+    //"master" value
+    let [value, setValue] = useState(preSelectedPreset.toString());
 
-    let [presetsListPrettified, setPresetsListPrettified] = useState(usdPresets);
-    let [valuePrettified, setValuePrettified] = useState(presetsList[0].toString());
+    //"slave" value
+    let [presetsListPrettified, setPresetsListPrettified] = useState(defaultPresets);
+    let [valuePrettified, setValuePrettified] = useState(preSelectedPreset.toString());
 
     const handleCurrencyChange = (code) => {
         const newCurrency = currenciesList.filter(value => value.code === code).pop()
+        const newValue =  value / selectedCurrency.rate * newCurrency.rate;
+
+        const isAmongPresets = presetsListPrettified.filter(preset => preset.toString() === valuePrettified).length > 0
 
         const convertPreset = (value) => {
             return value * newCurrency.rate;
         }
 
-        const convertValue = (value) => {
-            return value / selectedCurrency.rate * newCurrency.rate;
+        const roundValue = (value) => {
+          return Math.round(value);
         }
 
         const prettifyValue = (value) => {
-            value = Math.round(value)
             const shaver = Math.pow(10, value.toString().length - 1) / 2
-            return Math.round( value / shaver) * shaver;
+            return Math.round(value / shaver) * shaver;
         }
 
-        setPresetsList(usdPresets.map(convertPreset))
-        setValue(convertValue(value).toString())
+        setValue(newValue.toString())
 
-        setPresetsListPrettified(usdPresets.map(convertPreset).map(prettifyValue))
-        setValuePrettified(prettifyValue(convertValue(value)).toString())
+        setPresetsListPrettified(defaultPresets.map(convertPreset).map(roundValue).map(prettifyValue))
+        setValuePrettified((isAmongPresets ? prettifyValue(roundValue(newValue)) : roundValue(newValue)).toString())
 
         setSelectedCurrency(newCurrency)
     }
-
 
 
     return <div className="App">
@@ -60,7 +63,7 @@ function App() {
                     {(selectedCurrency.symbol)}
                 </div>
                 <div className="input">
-                    <input type="number" value={valuePrettified} onChange={(event)=> {
+                    <input type="number" value={valuePrettified} onChange={(event) => {
                         setValue(event.target.value)
                         setValuePrettified(event.target.value)
                     }}/>
