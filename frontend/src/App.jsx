@@ -125,7 +125,7 @@ function App() {
             ))}
           </select>
         </div>
-        <button onClick={handleDonate}>Donate</button>
+        <button className="donate-button" onClick={handleDonate}>Donate</button>
       </div>
     </div>
   );
