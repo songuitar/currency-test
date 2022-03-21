@@ -75,7 +75,7 @@ function App() {
         currency: selectedCurrency.code,
       }),
     })
-        .then(response => response.json())
+      .then((response) => response.json())
       .then((response) => {
         if (response.ok) {
           alert("Thank you for your donation!");
