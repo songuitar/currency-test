@@ -46,8 +46,8 @@ function App() {
     };
 
     const restrictMinValue = (value) => {
-      return value === 0 ? 1 : value
-    }
+      return value === 0 ? 1 : value;
+    };
 
     setValue(newValue.toString());
 
@@ -65,24 +65,23 @@ function App() {
   };
 
   const handleDonate = () => {
-    fetch('http://' + vars.serverHost + ':' + vars.serverPort + '/donate',
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":"application/json"
-          },
-          body: JSON.stringify({
-            amount: value,
-            currency: selectedCurrency.code
-          })
-        })
-        .then(() => {
-          alert('Donated!')
-        })
-        .catch(error => {
-          console.log(error)
-        })
-  }
+    fetch("http://" + vars.serverHost + ":" + vars.serverPort + "/donate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: value,
+        currency: selectedCurrency.code,
+      }),
+    })
+      .then(() => {
+        alert("Donated!");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="App">
@@ -125,7 +124,9 @@ function App() {
             ))}
           </select>
         </div>
-        <button className="donate-button" onClick={handleDonate}>Donate</button>
+        <button className="donate-button" onClick={handleDonate}>
+          Donate
+        </button>
       </div>
     </div>
   );
