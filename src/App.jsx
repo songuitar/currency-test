@@ -1,6 +1,7 @@
 import "./App.css";
 import { currencies, usdPresets } from "./constants";
 import { useState } from "react";
+import vars from "./environment";
 
 function App() {
   const currenciesList = currencies;
@@ -44,6 +45,10 @@ function App() {
       return Math.round(value / shaver) * shaver;
     };
 
+    const restrictMinValue = (value) => {
+      return value === 0 ? 1 : value
+    }
+
     setValue(newValue.toString());
 
     setPresetsListPrettified(
@@ -51,13 +56,33 @@ function App() {
     );
     setValuePrettified(
       (isAmongPresets
-        ? prettifyValue(roundValue(newValue))
-        : roundValue(newValue)
+        ? restrictMinValue(prettifyValue(roundValue(newValue)))
+        : restrictMinValue(roundValue(newValue))
       ).toString()
     );
 
     setSelectedCurrency(newCurrency);
   };
+
+  const handleDonate = () => {
+    fetch('http://' + vars.serverHost + ':' + vars.serverPort + '/donate',
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":"application/json"
+          },
+          body: JSON.stringify({
+            amount: value,
+            currency: selectedCurrency.code
+          })
+        })
+        .then(() => {
+          alert('Donated!')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+  }
 
   return (
     <div className="App">
@@ -100,6 +125,7 @@ function App() {
             ))}
           </select>
         </div>
+        <button onClick={handleDonate}>Donate</button>
       </div>
     </div>
   );
