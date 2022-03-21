@@ -71,12 +71,17 @@ function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: value,
+        amount: Number(value),
         currency: selectedCurrency.code,
       }),
     })
-      .then(() => {
-        alert("Donated!");
+        .then(response => response.json())
+      .then((response) => {
+        if (response.ok) {
+          alert("Thank you for your donation!");
+        } else {
+          alert(response.error);
+        }
       })
       .catch((error) => {
         console.log(error);

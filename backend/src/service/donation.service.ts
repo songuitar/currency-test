@@ -2,9 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { Donation, DonationDocument } from '../schemas/donation.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IsEnum, IsPositive } from 'class-validator';
 
-export interface DonationDTO {
+enum Currencies {
+  USD = 'USD',
+  EUR = 'EUR',
+  GBP = 'GBP',
+  RUB = 'RUB',
+}
+
+export class DonationDTO {
+  @IsPositive()
   amount: number;
+
+  @IsEnum(Currencies)
   currency: string;
 }
 

@@ -13,4 +13,4 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 Server will be available at [http://localhost:3200](http://localhost:3000)
 
-to change mongodb connection string
+You can change mongodb connection string in `backend/src/app.module.ts`
